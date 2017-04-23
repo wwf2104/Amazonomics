@@ -1,0 +1,28 @@
+<!DOCTYPE>
+<html>
+	<title> Amazonomics: Error </title>
+	<style>
+
+	</style>
+
+	<header>
+		<h1> Amazonomics </h1>
+		<p><i> Some description of the project here </i></p>
+	</header>
+
+
+		
+  <body>
+	  {% if results[0] == 404 %}
+	      <h1> Did you put in the right URL? We can't find it - sorry! <br>
+	      You will be sent to the main page in 5 seconds. </h1>
+	      <script> setTimeout("location.replace('http://localhost:8111/');", 5000) </script>
+	  {% elif results[0] == 405 %}
+	      <h1> Looks like there's an issue with this website - sorry! <br>
+	      You will be sent to the main page in 5 seconds. </h1>
+	      <script> setTimeout("location.replace('http://localhost:8111/');", 5000) </script>
+	  {% endif %}
+
+	</body>
+
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE>
+<html>
+    <title> Amazonomics </title>
+    <style>
+        #bodyoutline{border: 1px solid black; padding: 50px;}
+        body{
+            background-color: white;
+            width: 50%;
+            margin: auto;
+            border: 10px solid white;
+            font-family: times;
+            font-size: 15px;
+        }
+        label, output{
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #time_input{display: none;}
+        .alogo{height: 60px;}
+        #title{
+                font-size: 30px; font-weight: bold;}
+        header{text-align: center;}
+        b {
+            vertical-align: center; padding: 5px 10px;}
+        #time_input select{width:25%;}
+        #r {width: 50%;}
+        #r:hover{cursor: pointer;}
+        input[type='checkbox'] {
+            height: 12px;
+            width: 12px;
+            vertical-align: center;
+        }
+        #time_cbox {
+            display: inline-block; align: center;}
+        form {
+            border: 3px solid rgb(240,240,240); padding: 15px;}
+        .star {height: 15px;}
+        #rstars {display: inline-block;}
+    </style>
+
+    <script>
+        function updateR(val) {
+            var rstars = document.getElementById("rstars");
+            rstars.innerHTML = "";
+            for (i=0; i < 5-val; i++) {
+                rstars.innerHTML += "<img src='/static/emptystar.png' class='star' alt='empty star' align='right'>";
+            }
+            for (i=0; i < val; i++) {
+                rstars.innerHTML += "<img src='/static/fullstar.png' class='star' alt='full star' align='right'>"
+            }
+        }
+        function goBack() {
+            location.replace("http://localhost:5000");
+        }
+        function toggle_time() {
+            var c = document.getElementById("cbox").checked;
+            var t = document.getElementById("time_input");
+            if (c){t.style.display="block";}
+            else {t.style.display="none";}
+        }
+        function change_end(init) {
+            if (init=="2014") {
+                document.getElementById("end").disabled = true;
+            }
+            else {
+                var end = document.getElementById("end");
+                end.disabled = false;
+                end.innerHTML = "";
+                for (i= Number(init)+1; i < 2015; i++) {
+                    end.innerHTML += "<option value='"+String(i)+"'>"+String(i)+"</option>";
+                }
+                end.innerHTML += "<option value='None'>None</option>";
+            }
+        }
+    </script>
+
+    <div id="bodyoutline">
+    <header>
+        <img src="/static/amazon.png" class="alogo" alt="amazon_logo" align="left">
+        <img src="/static/amazon.png" class="alogo" alt="amazon_logo" align="right">
+        <p id="title"> Amazonomics </p>
+        <p><i> Using market data to predict consumer behavior </i></p>
+        <p> This site uses Amazon data from May 1996 - July 2014 </p>
+    </header>
+
+    <body>
+    {% if opts|length == 25 %}
+    <!-- {opts: [industries]} -->
+        <h3> Choose a rating to find the change in sentiment over time </h3>
+            <form method="POST" action="/sentiments/">
+                <b class="rate">Rating: </b>
+                <input type="range" id="r" name="rating" min="1" max="5" value="1" onchange="updateR(this.value)">
+                <div id="rstars">
+                {% for i in range(4) %}
+                    <img src="/static/emptystar.png" class="star" alt="empty star" align="right">
+                {% endfor %}
+                <img src="/static/fullstar.png" class="star" alt="full star" align="right">
+                </div>
+                <br><br>
+                <b> Departments </b>
+                <select name="industry">
+                {% for ind in opts %}
+                    <option value="{{ind}}">{{ind}}</option>
+                {% endfor %}
+                </select> <br><br>
+                <div id="time_cbox">
+                <b> Time(s) </b> <input type="checkbox" id="cbox" name="time" onchange="toggle_time()">
+                </div><br>
+                <div id="time_input">
+                    <b> From </b>
+                    <select name="year_init" onchange="change_end(this.value)">
+                        {% for i in range(1996, 2015) %}
+                            <option value="{{i}}">{{i}}</option>
+                        {% endfor %}
+                    </select>
+                    <b> Up to and Including </b>
+                    <select id="end" name="year_end">
+                        {% for i in range(1996, 2015) %}
+                            <option value="{{i}}">{{i}}</option>
+                        {% endfor %}
+                        <option value="None"> None </option>
+                    </select>
+                    <input type="submit" value="Submit">
+                </div>
+            </form>
+
+        <h3> Curse word analysis </h3>
+    {% else %}
+    <!-- Show Graphs and Search Specs -->
+
+    <!-- Go back to the index page -->
+    <button onclick="goBack()">Search Again</button>
+    {% endif %}
+    </body>
+    </div>
+
+</html>

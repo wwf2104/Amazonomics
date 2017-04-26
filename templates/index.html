@@ -2,10 +2,11 @@
 <html>
     <title> Amazonomics </title>
     <style>
+        html {background-color: rgb(70,70,70);}
         #bodyoutline{border: 1px solid black; padding: 50px;}
         body{
             background-color: white;
-            width: 50%;
+            width: 70%;
             margin: auto;
             border: 10px solid white;
             font-family: times;
@@ -31,9 +32,14 @@
         #time_cbox {
             display: inline-block; align: center;}
         form {
-            border: 3px solid rgb(240,240,240); padding: 15px;}
+            border: 3px solid rgb(240,240,240);
+            padding: 15px;
+            width: 75%;
+            margin: auto;
+        }
+        .sect {display: block; text-align: center;}
         .star {height: 15px;}
-        #rstars {display: inline-block;}
+        #rstars, #rstars2 {display: inline-block;}
         input[type="submit"] {
             display: block;
             width: 50%;
@@ -93,6 +99,7 @@
         <div id="load_msg">
             <b id="msg" class="center">Your results are loading -Please wait.</b>
         </div>
+        <div class="sect">
         <h3> Choose a rating to find the change in sentiment over time </h3>
             <form method="POST" action="/results/sent/" target="sent" onsubmit="update_iF('sent')">
                 <b class="rate">Rating: </b>
@@ -113,6 +120,8 @@
                 <input type="submit" value="Submit">
             </form>
             <iframe src="about:blank" id="sent" name="sent" width="100%"></iframe>
+        </div>
+        <div class="sect">
         <h3> Emotional Analysis </h3>
             <form method="POST" action="/results/emot/" target="emot" onsubmit="update_iF('emot')">
                 <b class="rate">Rating: </b>
@@ -133,6 +142,8 @@
                 <br><br><br><input type="submit" value="Submit">
             </form>
             <iframe src="about:blank" id="emot" name="emot" width="100%"></iframe>
+        </div>
+        <div class="sect">
         <h3> Review Rating by Year/Quarter </h3>
             <form method="POST" action="/results/quart/" target="quart" onsubmit="update_iF('quart')">
                 <b> Departments </b>
@@ -146,6 +157,7 @@
                 <br><br><br><input type="submit" value="Submit">
             </form>
             <iframe src="about:blank" id="quart" name="quart" width="100%"></iframe>
+        </div>
     </body>
     </div>
 

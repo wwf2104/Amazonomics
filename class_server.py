@@ -44,7 +44,7 @@ def sentiment():
     if dept != "All":
         fnames = ["static/"+dept+str(rating)+".png"]
     else: # dept==All
-        for d in industries:
+        for d in industries[1:]:
             fnames.append("static/"+d+rating+".png")
 
     options = dict(opts = fnames)
@@ -69,4 +69,4 @@ def quarters():
 
 #### RUN CODE ################
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')

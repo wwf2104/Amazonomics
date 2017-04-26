@@ -10,17 +10,15 @@
             border: 10px solid white;
             font-family: times;
             font-size: 15px;
+            overflow-x: hidden;
         }
-        label, output{
-            font-size: 18px;
-            font-weight: bold;
-        }
-        #time_input{display: none;}
+        #time_input, iframe{display: none;}
+        iframe {border: none; height: 475px;}
         .alogo{height: 60px;}
         #title{
                 font-size: 30px; font-weight: bold;}
         header{text-align: center;}
-        b {
+        b, i {
             vertical-align: center; padding: 5px 10px;}
         #time_input select{width:25%;}
         #r {width: 50%;}
@@ -36,11 +34,35 @@
             border: 3px solid rgb(240,240,240); padding: 15px;}
         .star {height: 15px;}
         #rstars {display: inline-block;}
+        input[type="submit"] {
+            display: block;
+            width: 50%;
+            text-align: center;
+            margin: auto;
+        }
+        #load_msg{
+            background-color: rgba(0,0,0,0.9);
+            z-index: 100;
+            position: fixed;
+            height: 40px;
+            width: 100%;
+            top: 50%;
+            left: 0;
+            border-top: dashed white;
+            border-bottom: dashed white;
+            display: none;
+            vertical-align: center;
+    	}
+       #msg {
+            color: white;
+            font-size: 30px;
+            display: block;
+            text-align: center;}
     </style>
 
     <script>
-        function updateR(val) {
-            var rstars = document.getElementById("rstars");
+        function updateR(val, id) {
+            var rstars = document.getElementById(id);
             rstars.innerHTML = "";
             for (i=0; i < 5-val; i++) {
                 rstars.innerHTML += "<img src='/static/emptystar.png' class='star' alt='empty star' align='right'>";
@@ -49,28 +71,11 @@
                 rstars.innerHTML += "<img src='/static/fullstar.png' class='star' alt='full star' align='right'>"
             }
         }
-        function goBack() {
-            location.replace("http://localhost:5000");
-        }
-        function toggle_time() {
-            var c = document.getElementById("cbox").checked;
-            var t = document.getElementById("time_input");
-            if (c){t.style.display="block";}
-            else {t.style.display="none";}
-        }
-        function change_end(init) {
-            if (init=="2014") {
-                document.getElementById("end").disabled = true;
-            }
-            else {
-                var end = document.getElementById("end");
-                end.disabled = false;
-                end.innerHTML = "";
-                for (i= Number(init)+1; i < 2015; i++) {
-                    end.innerHTML += "<option value='"+String(i)+"'>"+String(i)+"</option>";
-                }
-                end.innerHTML += "<option value='None'>None</option>";
-            }
+        function update_iF(id) {
+            var frame = document.getElementById(id);
+            frame.style.display = "block";
+            var load = document.getElementById("load_msg");
+            load.style.display = "block";
         }
     </script>
 
@@ -84,12 +89,14 @@
     </header>
 
     <body>
-    {% if opts|length == 25 %}
     <!-- {opts: [industries]} -->
+        <div id="load_msg">
+            <b id="msg" class="center">Your results are loading -Please wait.</b>
+        </div>
         <h3> Choose a rating to find the change in sentiment over time </h3>
-            <form method="POST" action="/sentiments/">
+            <form method="POST" action="/results/sent/" target="sent" onsubmit="update_iF('sent')">
                 <b class="rate">Rating: </b>
-                <input type="range" id="r" name="rating" min="1" max="5" value="1" onchange="updateR(this.value)">
+                <input type="range" id="r" name="rating" min="1" max="5" value="1" onchange="updateR(this.value,'rstars')">
                 <div id="rstars">
                 {% for i in range(4) %}
                     <img src="/static/emptystar.png" class="star" alt="empty star" align="right">
@@ -98,39 +105,47 @@
                 </div>
                 <br><br>
                 <b> Departments </b>
-                <select name="industry">
+                <select name="dept">
                 {% for ind in opts %}
                     <option value="{{ind}}">{{ind}}</option>
                 {% endfor %}
-                </select> <br><br>
-                <div id="time_cbox">
-                <b> Time(s) </b> <input type="checkbox" id="cbox" name="time" onchange="toggle_time()">
-                </div><br>
-                <div id="time_input">
-                    <b> From </b>
-                    <select name="year_init" onchange="change_end(this.value)">
-                        {% for i in range(1996, 2015) %}
-                            <option value="{{i}}">{{i}}</option>
-                        {% endfor %}
-                    </select>
-                    <b> Up to and Including </b>
-                    <select id="end" name="year_end">
-                        {% for i in range(1996, 2015) %}
-                            <option value="{{i}}">{{i}}</option>
-                        {% endfor %}
-                        <option value="None"> None </option>
-                    </select>
-                    <input type="submit" value="Submit">
-                </div>
+                </select><br><br>
+                <input type="submit" value="Submit">
             </form>
-
-        <h3> Curse word analysis </h3>
-    {% else %}
-    <!-- Show Graphs and Search Specs -->
-
-    <!-- Go back to the index page -->
-    <button onclick="goBack()">Search Again</button>
-    {% endif %}
+            <iframe src="about:blank" id="sent" name="sent" width="100%"></iframe>
+        <h3> Emotional Analysis </h3>
+            <form method="POST" action="/results/emot/" target="emot" onsubmit="update_iF('emot')">
+                <b class="rate">Rating: </b>
+                <input type="range" id="r" name="rating" min="1" max="5" value="1" onchange="updateR(this.value, 'rstars2')">
+                <div id="rstars2">
+                {% for i in range(4) %}
+                    <img src="/static/emptystar.png" class="star" alt="empty star" align="right">
+                {% endfor %}
+                <img src="/static/fullstar.png" class="star" alt="full star" align="right">
+                </div>
+                <br><br>
+                <b> Departments </b>
+                <select name="dept">
+                {% for ind in opts[1:] %}
+                    <option value="{{ind}}">{{ind}}</option>
+                {% endfor %}
+                </select>
+                <br><br><br><input type="submit" value="Submit">
+            </form>
+            <iframe src="about:blank" id="emot" name="emot" width="100%"></iframe>
+        <h3> Review Rating by Year/Quarter </h3>
+            <form method="POST" action="/results/quart/" target="quart" onsubmit="update_iF('quart')">
+                <b> Departments </b>
+                <select name="dept">
+                {% for ind in opts[1:] %}
+                    <option value="{{ind}}">{{ind}}</option>
+                {% endfor %}
+                </select> <br><br>
+                <i>Number of Reviews By Quarter <input type="radio" name="time_span" value="count" checked>
+                Average Review Rating By Quarter <input type="radio" name="time_span" value="avg"> </i>
+                <br><br><br><input type="submit" value="Submit">
+            </form>
+            <iframe src="about:blank" id="quart" name="quart" width="100%"></iframe>
     </body>
     </div>
 

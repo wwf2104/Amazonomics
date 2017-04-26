@@ -1,0 +1,32 @@
+<!DOCTYPE>
+<html>
+    <title> Amazonomics: Results </title>
+    <style>
+        body{
+            background-color: white;
+            width: 100%;
+            margin: auto;
+            font-family: times;
+            font-size: 15px;
+        }
+        img {
+            display: block;
+            max-height: 350px;
+            width: auto;
+            margin: auto;
+        }
+    </style>
+    <script>
+        function hide_msg() {
+            var load = window.parent.document.getElementById("load_msg");
+            load.style.display = "none";
+        }
+    </script>
+    <body onload="hide_msg()">
+        <h1> Results </h1>
+            {% for pic in opts %}
+                <img src="/{{pic}}"> <br>
+                {{pic[7:]}}<hr><br>
+            {% endfor %}
+    </body>
+</html>

@@ -2,42 +2,47 @@
 <html>
     <title> Amazonomics </title>
     <style>
-        html {background-color: rgb(70,70,70);}
-        #bodyoutline{border: 1px solid black; padding: 50px;}
+        html {
+            background-color: rgb(70,70,70);}
         body{
             background-color: white;
-            width: 70%;
+            height: auto;
             margin: auto;
-            border: 10px solid white;
             font-family: times;
             font-size: 15px;
-            overflow-x: hidden;
+            overflow: hidden;
+            padding-bottom: 20px;
         }
-        #time_input, iframe{display: none;}
-        iframe {border: none; height: 475px;}
-        .alogo{height: 60px;}
-        #title{
-                font-size: 30px; font-weight: bold;}
+        #wordcloud, #emot_analysis, #rate_count, iframe{display: none;}
+        #about {
+            text-align: left;
+            width: 65%;
+            margin: auto;
+        }
+        iframe {
+            border: none;
+            height: 475px;
+            width: 65%;
+            margin: auto;
+        }
+        .alogo{height: 60px; margin: 0 13% 0 13%;}
+        #title{font-size: 30px; font-weight: bold;}
         header{text-align: center;}
-        b, i {
-            vertical-align: center; padding: 5px 10px;}
-        #time_input select{width:25%;}
+        b, i {vertical-align: center; padding: 5px 10px;}
+        select{width:25%;}
         #r {width: 50%;}
         #r:hover{cursor: pointer;}
-        input[type='checkbox'] {
-            height: 12px;
-            width: 12px;
-            vertical-align: center;
-        }
-        #time_cbox {
-            display: inline-block; align: center;}
         form {
             border: 3px solid rgb(240,240,240);
             padding: 15px;
-            width: 75%;
+            width: 50%;
             margin: auto;
         }
-        .sect {display: block; text-align: center;}
+        .sect {
+            text-align: center;
+            background-color: white;
+            width: 100%;
+        }
         .star {height: 15px;}
         #rstars, #rstars2 {display: inline-block;}
         input[type="submit"] {
@@ -59,11 +64,41 @@
             display: none;
             vertical-align: center;
     	}
-       #msg {
+        #msg {
             color: white;
             font-size: 30px;
             display: block;
             text-align: center;}
+        #navbar {
+            display: inline-flex;
+            width: 100%;
+            overflow: hidden;
+            position: fixed;
+            top:0;
+            left:0;
+        }
+        .navbuttons:hover {
+            color: orange;
+            background-color: rgb(30,30,30);
+            cursor: pointer;
+            font-style: italic;
+        }
+        .navbuttons, .active, #proj_name {
+            border: none;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            font-size: 20px;
+            font-family: times;
+            width: 100%;
+            text-align: center;
+            float: left;
+            background-color: black;
+        }
+        #proj_name {color: white; font-family: Courier;}
+        .navbuttons {color: white;}
+        .active {color: orange; font-weight: bold;}
+        li {margin: 0% 5%;}
+        button:focus {outline:none;}
     </style>
 
     <script>
@@ -83,23 +118,66 @@
             var load = document.getElementById("load_msg");
             load.style.display = "block";
         }
+        function toggle(id,btn) {
+            var sect = document.getElementsByClassName("sect");
+            for (i=0; i<sect.length;i++) {
+                if (sect[i].id != id) {
+                    sect[i].style.display = "none";}
+                else {sect[i].style.display = "block";}
+            }   
+            document.getElementsByClassName("active")[0].className = "navbuttons";
+            btn.className = "active";
+        }
     </script>
 
-    <div id="bodyoutline">
     <header>
-        <img src="/static/amazon.png" class="alogo" alt="amazon_logo" align="left">
-        <img src="/static/amazon.png" class="alogo" alt="amazon_logo" align="right">
-        <p id="title"> Amazonomics </p>
-        <p><i> Using market data to predict consumer behavior </i></p>
-        <p> This site uses Amazon data from May 1996 - July 2014 </p>
-    </header>
+    <div id="navbar">
+        <button id="proj_name"> AMAZONOMICS || </button>
+        <button class="active" onclick="toggle('about',this)">
+        ABOUT US </button>
+        <button class="navbuttons" onclick="toggle('wordcloud',this)">
+        WORDCLOUD ANALYSIS </button>
+        <button class="navbuttons" onclick="toggle('emot_analysis',this)">
+        EMOTIONAL ANALYSIS </button>
+        <button class="navbuttons" onclick="toggle('rate_count',this)">
+        REVIEW COUNT/RATING </button>
+    </div>
+    <br> <br> <br>
 
     <body>
     <!-- {opts: [industries]} -->
         <div id="load_msg">
             <b id="msg" class="center">Your results are loading -Please wait.</b>
         </div>
-        <div class="sect">
+        <div class="sect" id="about">
+
+        <img src="/static/amazon.png" class="alogo" alt="amazon_logo" align="left">
+        <img src="/static/amazon.png" class="alogo" alt="amazon_logo" align="right">
+        <p id="title" align="center"> Amazonomics </p>
+        <p align="center"><i> Using market data to predict consumer behavior </i></p>
+        <p align="center"> This site uses Amazon data from May 1996 - July 2014 </p>
+
+
+        <h3> Our Project </h3>
+            <ul> Where we got our data: <br>
+            <li> <a href="http://jmcauley.ucsd.edu/data/amazon/">
+            Julian McAuley of UCSD </a> </li> </ul>
+            <ul> Economic Data: <br>
+            <li> <a href="https://www.google.com/search?q=us+unemployment+rate&oq=us+unemp&aqs=chrome.0.0l2j69i57j0l3.2080j0j7&sourceid=chrome&ie=UTF-8"> Unemployment Rate </a> </li>
+            <li> <a href="https://data.oecd.org/leadind/consumer-confidence-index-cci.htm">
+            Consumer Confidence </a> </li>
+            <li> <a href="https://www.statista.com/statistics/266282/annual-net-revenue-of-amazoncom/"> Amazon Revenue </a> </li>
+            </ul>
+        <h3> What We Did </h3>
+            <p> We exploited tens of gigabytes of Amazon data to make inferences about consumer behavior during different phases of the economy. We utilized non-traditional behavioral research tools like text mining, specifically sentiment analysis, frequency analysis and the like. The idea was to understand how consumers feel by reading millions and millions of amazon product reviews. We cleaned the data, thought of theories, and tested them using visual aid. </p>
+        <h3> Our Questions </h3>
+            <ul>
+                <li> Does the sentiment, for the same rating, change over different phases of the economy? If so, does it change uniformly? </li>
+                <li> What product categories are worst affected?  </li>
+                <li> How closely does this sentiment change match the economic indices like Consumer Confidence Index or unemployment? </li>
+            </ul>
+        </div>
+        <div class="sect" id="wordcloud">
         <h3> Choose a rating to find the change in sentiment over time </h3>
             <form method="POST" action="/results/sent/" target="sent" onsubmit="update_iF('sent')">
                 <b class="rate">Rating: </b>
@@ -121,7 +199,7 @@
             </form>
             <iframe src="about:blank" id="sent" name="sent" width="100%"></iframe>
         </div>
-        <div class="sect">
+        <div class="sect" id="emot_analysis">
         <h3> Emotional Analysis </h3>
             <form method="POST" action="/results/emot/" target="emot" onsubmit="update_iF('emot')">
                 <b class="rate">Rating: </b>
@@ -143,7 +221,7 @@
             </form>
             <iframe src="about:blank" id="emot" name="emot" width="100%"></iframe>
         </div>
-        <div class="sect">
+        <div class="sect" id="rate_count">
         <h3> Review Rating by Year/Quarter </h3>
             <form method="POST" action="/results/quart/" target="quart" onsubmit="update_iF('quart')">
                 <b> Departments </b>
@@ -159,6 +237,5 @@
             <iframe src="about:blank" id="quart" name="quart" width="100%"></iframe>
         </div>
     </body>
-    </div>
 
 </html>
